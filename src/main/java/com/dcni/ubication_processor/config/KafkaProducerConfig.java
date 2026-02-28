@@ -14,12 +14,23 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Configuración del productor de Kafka para publicar actualizaciones de
+ * horarios.
+ * Define el factory y template necesarios para enviar mensajes de tipo
+ * HorarioModel.
+ */
 @Configuration
 public class KafkaProducerConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
+    /**
+     * Crea el factory del productor de Kafka configurado para HorarioModel.
+     * 
+     * @return Factory configurado para producir mensajes de horarios
+     */
     @Bean
     public ProducerFactory<String, HorarioModel> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
@@ -30,6 +41,11 @@ public class KafkaProducerConfig {
         return new DefaultKafkaProducerFactory<>(configProps);
     }
 
+    /**
+     * Crea el template de Kafka para enviar mensajes de horarios.
+     * 
+     * @return Template configurado para enviar actualizaciones de horarios
+     */
     @Bean
     public KafkaTemplate<String, HorarioModel> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());

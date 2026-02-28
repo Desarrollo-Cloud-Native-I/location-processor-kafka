@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Modelo que representa la información de horario de un vehículo.
+ * Incluye datos sobre la ruta, parada, tiempo estimado de llegada y retrasos.
+ */
 @Data
 @Builder
 @NoArgsConstructor

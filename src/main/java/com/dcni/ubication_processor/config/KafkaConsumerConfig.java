@@ -14,6 +14,11 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Configuración del consumidor de Kafka para recibir ubicaciones de vehículos.
+ * Define el factory y listener necesarios para consumir mensajes de tipo
+ * UbicationModel.
+ */
 @Configuration
 public class KafkaConsumerConfig {
 
@@ -23,6 +28,11 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
 
+    /**
+     * Crea el factory del consumidor de Kafka configurado para UbicationModel.
+     * 
+     * @return Factory configurado para consumir mensajes de ubicaciones
+     */
     @Bean
     public ConsumerFactory<String, UbicationModel> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -31,18 +41,23 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false); // Ignorar headers de tipo del productor
+        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
         props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, UbicationModel.class.getName());
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
+    /**
+     * Crea el listener container factory para procesar mensajes de ubicaciones.
+     * Incluye manejo de errores con reintentos.
+     * 
+     * @return Factory configurado con manejo de errores
+     */
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, UbicationModel> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, UbicationModel> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         factory.setCommonErrorHandler(new org.springframework.kafka.listener.DefaultErrorHandler(
-                new org.springframework.util.backoff.FixedBackOff(1000L, 2L))); // Reintentar 2 veces con 1 seg de
-                                                                                // espera
+                new org.springframework.util.backoff.FixedBackOff(1000L, 2L)));
         return factory;
     }
 }

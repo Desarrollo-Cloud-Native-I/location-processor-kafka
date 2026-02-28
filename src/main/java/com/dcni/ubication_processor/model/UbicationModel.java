@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Modelo que representa la ubicación de un vehículo.
+ * Contiene información geográfica, velocidad y estado del vehículo.
+ */
 @Data
 @Builder
 @NoArgsConstructor

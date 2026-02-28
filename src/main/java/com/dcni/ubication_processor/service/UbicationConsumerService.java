@@ -6,6 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio consumidor de ubicaciones de vehículos desde Kafka.
+ * Procesa cada ubicación recibida, calcula actualizaciones de horarios y
+ * publica los resultados en el tópico de horarios.
+ */
 @Slf4j
 @Service
 public class UbicationConsumerService {
@@ -20,10 +25,11 @@ public class UbicationConsumerService {
     }
 
     /**
-     * Consume mensajes del tópico "ubicaciones_vehiculos"
-     * Procesa la ubicación y publica actualizaciones de horarios
+     * Consume mensajes del tópico de ubicaciones de vehículos.
+     * Procesa cada ubicación, calcula horarios y publica actualizaciones si hay
+     * cambios significativos.
      * 
-     * @param ubication La ubicación del vehículo recibida
+     * @param ubication Ubicación del vehículo recibida desde Kafka
      */
     @KafkaListener(topics = "${kafka.topic.ubicaciones}", groupId = "${spring.kafka.consumer.group-id}")
     public void consumeUbication(UbicationModel ubication) {
@@ -36,10 +42,8 @@ public class UbicationConsumerService {
         log.info("Timestamp: {}", ubication.getTimestamp());
 
         try {
-            // Procesar la señal y calcular actualizaciones de horarios
             HorarioModel horario = signalProcessingService.processUbication(ubication);
 
-            // Publicar la actualización de horarios solo si hay cambios significativos
             if (horario != null) {
                 horarioProducerService.publishHorario(horario);
                 log.info("✅ Horario publicado para vehículo: {}", ubication.getVehicleId());

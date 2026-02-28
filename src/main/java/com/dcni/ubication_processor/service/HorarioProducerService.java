@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Servicio productor de actualizaciones de horarios a Kafka.
+ * Publica información de horarios calculados para cada vehículo.
+ */
 @Slf4j
 @Service
 public class HorarioProducerService {
