@@ -22,10 +22,10 @@ public class HorarioModel {
     private String stopId;
     private LocalDateTime estimatedArrival;
     private LocalDateTime actualArrival;
-    private String status; // "ON_TIME", "DELAYED", "EARLY", "ARRIVED"
+    private String status; 
     private Integer delayMinutes;
-    private Double distanceToStop; // Distancia en kilómetros
+    private Double distanceToStop; 
     private LocalDateTime timestamp;
-    private String updateReason; // "LOCATION_UPDATE", "TRAFFIC", "STOP_ARRIVAL"
+    private String updateReason; 
 
 }
